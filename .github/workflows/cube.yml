@@ -1,0 +1,35 @@
+name: Cube port
+on:
+  pull_request:
+    paths:
+      - "cube/**"
+      - "cube.json"
+      - "frontend/**"
+      - "backend/**"
+      - "packages/**"
+      - ".github/workflows/cube.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Build the installable Cube application
+        run: node cube/install.mjs
+      - name: Check gateway, streaming, and machine filesystem adapter
+        run: cube/runtime/node/bin/node --test cube/server.test.mjs cube/rpc.test.mjs
+      - name: Check browser integration and terminal regressions
+        run: npm test --prefix frontend -- --maxWorkers=2 --run src/renderer/lib/cube-bridge.test.ts src/renderer/lib/api-client.test.ts src/renderer/lib/terminal-mux.test.ts src/renderer/components/RemoteDirectoryPicker.test.tsx src/renderer/components/TerminalPane.test.tsx
+      - name: Install shared type dependencies
+        run: |
+          npm ci --prefix packages/product-ui
+          npm ci --prefix packages/cloud-client
+      - name: Typecheck the production renderer
+        working-directory: frontend
+        run: npx tsc --noEmit -p tsconfig.cube.json

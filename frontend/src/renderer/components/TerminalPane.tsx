@@ -1,3 +1,5 @@
+// Cube modification: attach real PTYs in the browser port.
+import { isCube } from "../lib/cube-mode";
 import { useQueryClient } from "@tanstack/react-query";
 import { RotateCcw } from "lucide-react";
 import {
@@ -730,7 +732,7 @@ export function TerminalPane({
 			? terminalTarget.handleId
 			: `${session?.terminalHandleId ?? "empty"}:${session?.terminalGeneration ?? ""}`;
 
-	if (!window.ao) {
+	if (!window.ao && !isCube) {
 		// A standalone shell has no agent and no branch, so it previews as a plain
 		// prompt rather than borrowing the session's agent transcript.
 		if (terminalTarget?.kind === "shell") {

@@ -43,3 +43,35 @@ it("never simulates browser profile creation in Cube", async () => {
     createCubeBridge(aoBridge).browserProfiles.create("test"),
   ).rejects.toThrow("unavailable");
 });
+it("selects a machine directory and resolves cancellation without a native dialog", async () => {
+  const { createCubeBridge, getCubeDirectory, finishCubeDirectory } =
+    await import("./cube-bridge");
+  const { aoBridge } = await import("./bridge");
+  const bridge = createCubeBridge(aoBridge);
+  const selected = bridge.app.chooseDirectory({
+    defaultPath: "/workspace/home/repos",
+  });
+  expect(getCubeDirectory()?.initialPath).toBe("/workspace/home/repos");
+  finishCubeDirectory("/workspace/home/repos/project");
+  expect(await selected).toBe("/workspace/home/repos/project");
+  const cancelled = bridge.app.chooseDirectory();
+  finishCubeDirectory(null);
+  expect(await cancelled).toBeNull();
+});
+it("keeps API and terminal connections on the browser origin in Cube mode", async () => {
+  vi.stubEnv("VITE_CUBE", "1");
+  vi.resetModules();
+  try {
+    const { applyDaemonStatus } = await import("./daemon-status");
+    const { getApiBaseUrl } = await import("./api-client");
+    const { muxUrlFromApiBase } = await import("./terminal-mux");
+    applyDaemonStatus({ state: "ready", port: 43123 });
+    expect(getApiBaseUrl()).toBe(window.location.origin);
+    expect(muxUrlFromApiBase(getApiBaseUrl())).toBe(
+      window.location.origin.replace(/^http/, "ws") + "/mux",
+    );
+  } finally {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  }
+}, 60000);

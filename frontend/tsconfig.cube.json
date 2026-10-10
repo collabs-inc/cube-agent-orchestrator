@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/renderer/main.tsx",
+    "src/renderer/lib/cube-bridge.ts",
+    "src/renderer/lib/cube-mode.ts",
+    "src/renderer/lib/daemon-status.ts",
+    "src/renderer/components/CubeDirectoryPicker.tsx",
+    "src/renderer/components/RemoteDirectoryPicker.tsx",
+    "src/renderer/components/BrowserPanel.tsx",
+    "src/renderer/components/settings/settingsCatalog.tsx",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/docs"
+  ]
+}

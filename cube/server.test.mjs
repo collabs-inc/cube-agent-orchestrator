@@ -18,6 +18,7 @@ async function fixture(t) {
       JSON.stringify({
         path: req.url,
         origin: req.headers.origin,
+        cookie: req.headers.cookie,
         host: req.headers.host,
       }),
     );
@@ -140,4 +141,38 @@ test("streams SSE without buffering and relays terminal WebSocket frames", async
   ws.send("terminal input");
   assert.equal(await message, "terminal input");
   ws.close();
+});
+
+test("accepts Cube HTTPS forwarded origins and strips browser credentials", async (t) => {
+  const base = await fixture(t);
+  const send = (origin) =>
+    new Promise((resolve, reject) => {
+      const req = httpRequest(
+        base + "/api/v1/projects",
+        {
+          method: "POST",
+          headers: {
+            Host: "app-test.cube.site",
+            Origin: origin,
+            "X-Forwarded-Proto": "https",
+            Cookie: "cube_session=private",
+          },
+        },
+        (res) => {
+          let body = "";
+          res.on("data", (chunk) => (body += chunk));
+          res.on("end", () =>
+            resolve({ status: res.statusCode, body: JSON.parse(body) }),
+          );
+        },
+      );
+      req.on("error", reject);
+      req.end("{}");
+    });
+  const accepted = await send("https://app-test.cube.site");
+  assert.equal(accepted.status, 200);
+  assert.equal(accepted.body.origin, undefined);
+  assert.equal(accepted.body.cookie, undefined);
+  assert.match(accepted.body.host, /^127\.0\.0\.1:/);
+  assert.equal((await send("https://different.cube.site")).status, 403);
 });
