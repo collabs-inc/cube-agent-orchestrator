@@ -374,7 +374,8 @@ export function useBrowserAnnotationQueue({
 }
 
 export function BrowserPanel(props: BrowserPanelProps) {
-	if (isCube) return <div className="p-6 text-sm text-muted-foreground">The embedded desktop browser is unavailable in the Cube port. Open your app through Cube’s preview instead.</div>;
+	const { t } = useTranslation();
+	if (isCube) return <div className="p-6 text-sm text-muted-foreground">{t("browser.cubeUnavailable")}</div>;
 	return <DesktopBrowserPanel {...props} />;
 }
 

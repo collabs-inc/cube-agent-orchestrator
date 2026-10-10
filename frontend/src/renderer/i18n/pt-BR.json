@@ -1,4 +1,5 @@
 {
+	"browser.cubeUnavailable": "O navegador de desktop integrado não está disponível na versão para Cube. Abra seu aplicativo pela prévia do Cube.",
 	"chat.annotationReferences": "Referenced chat annotations",
 	"chat.removeAnnotation": "Remove annotation {{count}}",
 	"chat.startup.queuePlaceholder": "{{agent}} está iniciando. As mensagens são enviadas em ordem",

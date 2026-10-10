@@ -1,4 +1,5 @@
 {
+	"browser.cubeUnavailable": "Cube 버전에서는 내장 데스크톱 브라우저를 사용할 수 없습니다. Cube 미리보기에서 앱을 여세요.",
 	"chat.annotationReferences": "Referenced chat annotations",
 	"chat.removeAnnotation": "Remove annotation {{count}}",
 	"chat.startup.queuePlaceholder": "{{agent}} 시작 중. 메시지는 순서대로 전송됩니다",
