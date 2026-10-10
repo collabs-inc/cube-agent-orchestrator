@@ -1,3 +1,5 @@
+// Modified for Cube: native browser profile and mobile controls are unavailable.
+import { isCube } from "../../lib/cube-mode";
 import { Activity, BadgeCheck, Bot, CircleHelp, Globe2, Keyboard, RefreshCw, Server, Settings2, Smartphone, type LucideIcon } from "lucide-react";
 import { lazy, type ReactNode } from "react";
 import type { TFunction } from "i18next";
@@ -77,6 +79,7 @@ const globalSettingsCatalog: SettingsCatalogItem[] = [
 	},
 	{
 		id: "browserProfiles",
+		visible: () => !isCube,
 		icon: Globe2,
 		label: (t) => t("settings.browserProfiles"),
 		render: (_t, titleHidden) => (
@@ -97,11 +100,12 @@ const globalSettingsCatalog: SettingsCatalogItem[] = [
 		id: "remoteHosts",
 		icon: Server,
 		label: (t) => t("settings.remoteHosts"),
-		visible: ({ developerMode }) => developerMode,
+		visible: ({ developerMode }) => !isCube && developerMode,
 		render: (_t, titleHidden) => <RemoteHostsSettings titleHidden={titleHidden} />,
 	},
 	{
 		id: "mobile",
+		visible: () => !isCube,
 		icon: Smartphone,
 		label: (t) => t("settings.mobile"),
 		render: (t, titleHidden) => (
@@ -137,6 +141,7 @@ const globalSettingsCatalog: SettingsCatalogItem[] = [
 	},
 	{
 		id: "updates",
+		visible: () => !isCube,
 		icon: RefreshCw,
 		label: (t) => t("settings.updates"),
 		render: (_t, titleHidden) => <UpdatesSection titleHidden={titleHidden} />,

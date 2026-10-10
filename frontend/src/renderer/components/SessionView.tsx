@@ -1,3 +1,5 @@
+// Cube modification: enable local daemon review queries without Electron.
+import { isCube } from "../lib/cube-mode";
 import { useIsMutating, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Globe2, Loader2, PanelRight, Plus } from "lucide-react";
 import { useBlocker } from "@tanstack/react-router";
@@ -739,7 +741,7 @@ export function SessionView({ sessionId, cloudOrgId, projectId, hostId }: Sessio
 	const reviewerQuery = useQuery({
 		queryKey: sessionReviewsQueryKey(sessionId, hostId),
 		enabled: Boolean(
-			(hostId ? remoteBase : window.ao) && session && !session.cloud && sessionIsActive(session) && !isOrchestratorSession(session) && session.prs.length > 0,
+			(hostId ? remoteBase : (window.ao || isCube)) && session && !session.cloud && sessionIsActive(session) && !isOrchestratorSession(session) && session.prs.length > 0,
 		),
 		refetchInterval: (query) => {
 			const data = query.state.data as ReviewsResponse | undefined;

@@ -103,3 +103,8 @@ pnpm-lock.yaml
 
 # Serena MCP local project config
 .serena/
+
+# Cube port build outputs and toolchains
+/cube/ao
+/cube/runtime/
+/cube/web/

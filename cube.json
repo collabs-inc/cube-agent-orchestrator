@@ -1,0 +1,8 @@
+{
+  "name": "Agent Orchestrator",
+  "description": "Manage coding agents, repositories, and live terminals on your Cube machine. Community port of Orchestrator.inc.",
+  "icon": "assets/ao-logo.svg",
+  "platforms": ["linux"],
+  "install": "node cube/install.mjs",
+  "start": "exec cube/runtime/node/bin/node cube/start.mjs"
+}

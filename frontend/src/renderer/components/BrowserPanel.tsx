@@ -1,3 +1,5 @@
+// Modified for Cube: desktop browser composition has an explicit unavailable state.
+import { isCube } from "../lib/cube-mode";
 import {
 	memo,
 	useCallback,
@@ -371,7 +373,12 @@ export function useBrowserAnnotationQueue({
 	};
 }
 
-export function BrowserPanel({
+export function BrowserPanel(props: BrowserPanelProps) {
+	if (isCube) return <div className="p-6 text-sm text-muted-foreground">The embedded desktop browser is unavailable in the Cube port. Open your app through Cube’s preview instead.</div>;
+	return <DesktopBrowserPanel {...props} />;
+}
+
+function DesktopBrowserPanel({
 	session,
 	active,
 	poppedOut,

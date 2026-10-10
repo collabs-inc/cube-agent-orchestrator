@@ -1,9 +1,12 @@
+// Modified for Cube: opt-in real browser bridge; desktop and preview retain upstream behavior.
+import { createCubeBridge } from "./cube-bridge";
+import { isCube } from "./cube-mode";
 import type { AoBridge } from "../../preload";
 import { coerceUiSettings, DEFAULT_UI_SETTINGS } from "../../shared/ui-locale";
 export type { FeatureBuild } from "../../main/feature-builds";
 
 
-export const aoBridge: AoBridge =
+const defaultBridge: AoBridge =
 	window.ao ??
 	({
 		app: {
@@ -334,3 +337,5 @@ export const aoBridge: AoBridge =
 			onStreamEvent: () => () => undefined,
 		},
 	} satisfies AoBridge);
+
+export const aoBridge: AoBridge = isCube ? createCubeBridge(defaultBridge) : defaultBridge;
