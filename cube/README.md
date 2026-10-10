@@ -75,7 +75,8 @@ npm test --prefix frontend -- --maxWorkers=1 --run \
   src/renderer/lib/cube-bridge.test.ts \
   src/renderer/lib/api-client.test.ts \
   src/renderer/lib/terminal-mux.test.ts \
-  src/renderer/components/RemoteDirectoryPicker.test.tsx
+  src/renderer/components/RemoteDirectoryPicker.test.tsx \
+  src/renderer/components/TerminalPane.test.tsx
 ```
 
 For browser acceptance, use isolated state and a disposable Git repository.
@@ -84,3 +85,9 @@ creation, live terminal input/output, and page reload. A test harness executable
 can validate process routing without using a paid model or a user's sign-in.
 Production HTTPS gateway behavior and actual provider authentication require
 separate integration checks.
+
+To typecheck the production renderer, install the shared package dependencies
+and run `npx tsc --noEmit -p tsconfig.cube.json` from `frontend`. The dedicated
+Cube CI workflow builds the installer output and runs these checks. The larger
+upstream desktop suite also needs Electron and packaging tools such as `zip`;
+those are test dependencies, not requirements for running this Cube app.
