@@ -1,9 +1,10 @@
+// Modified for Cube: an omitted host selects the current machine API.
 import * as Dialog from "@radix-ui/react-dialog";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUp, ChevronRight, Folder, FolderGit2, X } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { apiErrorMessage } from "../lib/api-client";
+import { apiClient, apiErrorMessage } from "../lib/api-client";
 import { clientForHost } from "../lib/host-clients";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -11,7 +12,7 @@ import { Skeleton } from "./ui/skeleton";
 
 /** The only host-specific part of the shared create-project flow: browse the daemon's filesystem. */
 export function RemoteDirectoryPicker({ hostId, hostLabel, connected, initialPath = "", onChoose, onClose }: {
-	hostId: string;
+	hostId?: string;
 	hostLabel: string;
 	connected: boolean;
 	initialPath?: string;
@@ -26,7 +27,7 @@ export function RemoteDirectoryPicker({ hostId, hostLabel, connected, initialPat
 		enabled: connected,
 		retry: false,
 		queryFn: async () => {
-			const { data, error } = await clientForHost(hostId).GET("/api/v1/fs/dirs", { params: { query: lookup ? { path: lookup } : {} } });
+			const { data, error } = await (hostId ? clientForHost(hostId) : apiClient).GET("/api/v1/fs/dirs", { params: { query: lookup ? { path: lookup } : {} } });
 			if (error || !data) throw new Error(apiErrorMessage(error, t("remote.directoryPicker.listFailed")));
 			return data;
 		},

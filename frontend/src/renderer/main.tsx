@@ -1,3 +1,6 @@
+// Modified for Cube: mount the machine directory dialog.
+import { CubeDirectoryPicker } from "./components/CubeDirectoryPicker";
+import { isCube } from "./lib/cube-mode";
 import "./lib/apply-initial-theme";
 import { createRoot } from "react-dom/client";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -113,6 +116,7 @@ async function renderApp(): Promise<void> {
 		<I18nextProvider i18n={appI18n}>
 			<TelemetryBoundary>
 				<QueryClientProvider client={queryClient}>
+					{isCube && <CubeDirectoryPicker />}
 					<CloudNotificationRuntime />
 					<RouterProvider router={router} />
 					<CloudOnboardingGate />
